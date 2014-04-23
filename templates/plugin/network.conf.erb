@@ -1,6 +1,6 @@
 <Plugin network>
 <% @servers.each do |name,params| -%>
-<% if collectd_version and (scope.function_versioncmp([collectd_version, '4.7']) >= 0) -%>
+<% if @collectd_version and (scope.function_versioncmp([collectd_version, '4.7']) >= 0) -%>
   <Server "<%= name %>" "<%= params['port'] %>">
 <% if params['securitylevel'] -%>
     SecurityLevel "<%= params['securitylevel'] %>"
@@ -20,7 +20,7 @@
 <% end -%>
 <% end -%>
 <% @listeners.each do |name,params| -%>
-<% if collectd_version and (scope.function_versioncmp([collectd_version, '4.7']) >= 0) -%>
+<% if @collectd_version and (scope.function_versioncmp([collectd_version, '4.7']) >= 0) -%>
   <Listen "<%= name %>" "<%= params['port'] %>">
 <% if params['securitylevel'] -%>
     SecurityLevel "<%= params['securitylevel'] %>"
