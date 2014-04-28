@@ -3,7 +3,7 @@ class collectd::plugin::unixsock (
   $socketfile   = '/var/run/collectd-socket',
   $socketgroup  = 'collectd',
   $socketperms  = '0770',
-  $deletesocker = false,
+  $deletesocket = false,
   $ensure       = present
 ) {
   validate_absolute_path($socketfile)
