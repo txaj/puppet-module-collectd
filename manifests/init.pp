@@ -2,6 +2,7 @@
 class collectd(
   $fqdnlookup   = true,
   $interval     = 10,
+  $package      = undef,
   $purge        = undef,
   $purge_config = false,
   $recurse      = undef,
@@ -16,9 +17,14 @@ class collectd(
   validate_bool($purge_config, $fqdnlookup)
   validate_array($typesdb)
 
+  $packagename = $package ? {
+    undef    => $collectd::params::package,
+    default  => $package,
+  }
+
   package { 'collectd':
     ensure   => $version,
-    name     => $collectd::params::package,
+    name     => $packagename,
     provider => $collectd::params::provider,
     before   => File['collectd.conf', 'collectd.d'],
   }
