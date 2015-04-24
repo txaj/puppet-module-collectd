@@ -107,7 +107,34 @@ describe 'collectd::plugin::python', :type => :class do
           :content => /Bar "bar"/,
         })
       end
+    end
 
+    context 'allow changing module path' do
+      let :params do
+        {
+          :modulepath => '/var/lib/collectd/python',
+          :modules    => {
+            'elasticsearch' => {
+              'script_source' => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
+              'config'        => {'Cluster' => 'ES-clust'}
+            }
+          }
+        }
+      end
+
+      it 'set default Python module path' do
+        should contain_concat__fragment('collectd_plugin_python_conf_header').with({
+          :content => /ModulePath "\/var\/lib\/collectd\/python"/,
+          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+        })
+      end
+
+      it 'created collectd plugin file' do
+        should contain_file('elasticsearch.script').with({
+          :ensure  => 'present',
+          :path    => '/var/lib/collectd/python/elasticsearch.py',
+        })
+      end
     end
   end
 
