@@ -76,21 +76,14 @@ describe 'collectd::plugin::python', :type => :class do
           :target  => '/etc/collectd/conf.d/11-python-config.conf',
         })
       end
+
+      it 'created collectd plugin file' do
+        should contain_file('elasticsearch.script').with({
+          :ensure  => 'present',
+          :path    => '/usr/lib/collectd/python/elasticsearch.py',
+        })
+      end
     end
-   # it 'Will create /etc/collectd/conf.d/10-python.conf' do
-   #   should contain_concat__fragment('collectd_plugin_python_conf_elasticsearch').with({
-   #     :ensure  => 'present',
-   #     :path    => '/etc/collectd/conf.d/10-elasticsearch.conf',
-   #     :content => "<LoadPlugin \"python\">\n    Globals true\n</LoadPlugin>\n\n<Plugin \"python\">\n    ModulePath \"/usr/lib/collectd\"\n\n    Import \"elasticsearch\"\n\n    <Module \"elasticsearch\">\n        Verbose false\n\t\tCluster \"elasticsearch\"\n    </Module>\n</Plugin>\n",
-   #   })
-   # end
-   # it 'Will create /usr/lib/collectd/elasticsearch.py' do
-   #   should contain_file('elasticsearch.script').with({
-   #     :ensure  => 'present',
-   #     :path    => '/usr/lib/collectd/elasticsearch.py',
-   #     #:content => "<Plugin network>\n  <Server \"node1\" \"1234\">\n    SecurityLevel \"Encrypt\"\n    Username \"foo\"\n    Password \"bar\"\n    Interface \"eth0\"\n\n  </Server>\n</Plugin>\n",
-   #   })
-   # end
   end
 
   context ':ensure => absent' do
