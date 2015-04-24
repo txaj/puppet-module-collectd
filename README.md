@@ -650,9 +650,10 @@ class { 'collectd::plugin::processes':
 
 ####Class: `collectd::plugin::python`
 
-`modulepath` is path to Python modules, this is global setting for all Python modules.
+ * `modulepath` is path to Python modules, this is global setting for all Python modules
+ * `modules` a Hash containing configuration of Python modules, where the key is the module name
 
-NOTE: Since `v3.4.0` has changed syntax of this plugin. Make sure to update your existing configuration. Now you can specify multiple Python modules at once:
+NOTE: Since `v3.4.0` the syntax of this plugin has changed. Make sure to update your existing configuration. Now you can specify multiple Python modules at once:
 
 ```puppet
 class { 'collectd::plugin::python':
