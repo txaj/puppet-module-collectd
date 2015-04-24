@@ -1,5 +1,5 @@
 #
-define collectd::plugin::python::script (
+define collectd::plugin::python::module (
   $config,
   $script_source = undef,
   $modulepath    = $collectd::plugin::python::modulepath,
@@ -29,6 +29,6 @@ define collectd::plugin::python::script (
     ensure  => $ensure,
     order   => $order,
     target  => $python_conf,
-    content => template('collectd/plugin/python/script.conf.erb'),
+    content => template('collectd/plugin/python/module.conf.erb'),
   }
 }

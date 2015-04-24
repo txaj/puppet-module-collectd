@@ -47,5 +47,5 @@ class collectd::plugin::python (
     'ensure'      => $ensure,
     'python_conf' => $python_conf,
   }
-  create_resources(collectd::plugin::python::script, $modules, $defaults)
+  create_resources(collectd::plugin::python::module, $modules, $defaults)
 }
