@@ -6,6 +6,8 @@ describe 'collectd::plugin::python', :type => :class do
     {
       :osfamily       => 'Debian',
       :concat_basedir => tmpfilename('collectd-python'),
+      :id             => 'root',
+      :kernel         => 'Linux',
       :path           => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
     }
   end
