@@ -198,7 +198,7 @@ collectd::plugin::curl::page {
 }
 ```
 
-You can as well configure this plugin with a parameterized class : 
+You can as well configure this plugin with a parameterized class :
 
 ```puppet
 class { 'collectd::plugin::curl':
@@ -449,7 +449,7 @@ collectd::plugin::network::listener{'hostname':
 }
 ```
 
-You can as well configure this plugin with a parameterized class : 
+You can as well configure this plugin with a parameterized class :
 
 ```puppet
 class { 'collectd::plugin::network':
@@ -527,7 +527,7 @@ This define will load a new perl plugin.
 #####Parameters:
 
 * `module` (String): name of perl module to load (mandatory)
-* `enable_debugger` (False or String): whether to load the perl debugger. See *collectd-perl* manpage for more details. 
+* `enable_debugger` (False or String): whether to load the perl debugger. See *collectd-perl* manpage for more details.
 * `include_dir` (String or Array): directories to add to *@INC*
 * `provider` (`"package"`,`"cpan"`,`"file"` or `false`): method to get the plugin code
 * `source` (String): this parameter is consumed by the provider to infer the source of the plugin code
@@ -650,13 +650,34 @@ class { 'collectd::plugin::processes':
 
 ####Class: `collectd::plugin::python`
 
+`modulepath` is path to Python modules, this is global setting for all Python modules.
+
+NOTE: Since `v3.4.0` has changed syntax of this plugin. Make sure to update your existing configuration. Now you can specify multiple Python modules at once:
+
 ```puppet
-collectd::plugin::python {
-  'elasticsearch':
-    modulepath    => '/usr/lib/collectd',
-    module        => 'elasticsearch',
-    script_source => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
-    config        => {'Cluster' => 'elasticsearch'},
+class { 'collectd::plugin::python':
+  modulepath => '/usr/lib/collectd/python',
+  modules    => {
+    'elasticsearch': {
+      'script_source' => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
+      'config'        => {'Cluster' => 'elasticsearch'},
+    },
+    'another-module': {
+      'config'        => {'Verbose' => 'true'},
+    }
+  }
+}
+```
+When `script_source` provided, a file called `{module}.py` will be created in `$modulepath/$module.py`.
+
+Or define single module:
+
+```
+collectd::plugin::python::module {'zk-collectd':
+  script_source => 'puppet:///modules/myorg/zk-collectd.py',
+  config        => {
+    'Hosts' => "localhost:2181"
+  }
 }
 ```
 
