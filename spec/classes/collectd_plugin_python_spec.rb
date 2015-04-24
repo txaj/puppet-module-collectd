@@ -51,6 +51,9 @@ describe 'collectd::plugin::python', :type => :class do
             'elasticsearch' => {
               'script_source' => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
               'config'        => {'Cluster' => 'ES-clust'}
+            },
+            'foo' => {
+              'config' => {'Verbose' => true, 'Bar' => 'bar' }
             }
           }
         }
@@ -83,6 +86,28 @@ describe 'collectd::plugin::python', :type => :class do
           :path    => '/usr/lib/collectd/python/elasticsearch.py',
         })
       end
+
+      # test foo module
+      it 'imports foo module' do
+        should contain_concat__fragment('collectd_plugin_python_conf_foo').with({
+          :content => /Import "foo"/,
+          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+        })
+      end
+
+      it 'includes foo module configuration' do
+        should contain_concat__fragment('collectd_plugin_python_conf_foo').with({
+          :content => /<Module "foo">/,
+          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+        })
+        should contain_concat__fragment('collectd_plugin_python_conf_foo').with({
+          :content => /Verbose "true"/,
+        })
+        should contain_concat__fragment('collectd_plugin_python_conf_foo').with({
+          :content => /Bar "bar"/,
+        })
+      end
+
     end
   end
 
