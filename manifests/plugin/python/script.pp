@@ -6,6 +6,7 @@ define collectd::plugin::python::script (
   $module        = $title,
   $ensure        = 'present',
   $order         = '50',
+  $python_conf   = "${collectd::params::plugin_conf_dir}/11-python-config.conf",
 ){
   include collectd::params
   include collectd::plugin::python
@@ -27,7 +28,7 @@ define collectd::plugin::python::script (
   concat::fragment{"collectd_plugin_python_conf_${module}":
     ensure  => $ensure,
     order   => $order,
-    target  => "${collectd::params::plugin_conf_dir}/11-python-config.conf",
+    target  => $python_conf,
     content => template('collectd/plugin/python/script.conf.erb'),
   }
 }

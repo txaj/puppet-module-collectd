@@ -2,37 +2,81 @@ require 'spec_helper'
 
 describe 'collectd::plugin::python', :type => :class do
 
-  context ':ensure => present' do
-    let :facts do
-      {
-        :osfamily       => 'Debian',
-        :concat_basedir => tmpfilename('collectd-python'),
-        :path           => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-      }
-    end
-    let (:config_filename) { '/etc/collectd/conf.d/10-python.conf' }
+  let :facts do
+    {
+      :osfamily       => 'Debian',
+      :concat_basedir => tmpfilename('collectd-python'),
+      :path           => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+    }
+  end
 
-    let (:title) {'python'}
-    let (:concat_fragment_name) { 'collectd_plugin_python' }
-    let :params do
-      {
-        :modulepath    => '/usr/lib/collectd',
-        :modules       => {
-          'elasticsearch' => {
-            :script_source => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
-            :config        => {'Cluster' => 'elasticsearch'}
+  context ':ensure => present' do
+    context ':ensure => present and default parameters' do
+      it 'Will create /etc/collectd/conf.d/10-python.conf to load the plugin' do
+        should contain_file('python.load').with({
+          :ensure  => 'present',
+          :path    => '/etc/collectd/conf.d/10-python.conf',
+          :content => /LoadPlugin python/,
+        })
+      end
+
+      it 'Will create /etc/collectd.d/conf.d/11-python.conf' do
+        should contain_concat__fragment('collectd_plugin_python_conf_header').with({
+          :content => /<Plugin "python">/,
+          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :order   => '00'
+        })
+      end
+
+      it 'set default Python module path' do
+        should contain_concat__fragment('collectd_plugin_python_conf_header').with({
+          :content => /ModulePath "\/usr\/lib\/collectd\/python"/,
+          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+        })
+      end
+
+      it 'Will create /etc/collectd.d/conf.d/11-python.conf' do
+        should contain_concat__fragment('collectd_plugin_python_conf_footer').with({
+          :content => /<\/Plugin>/,
+          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :order   => '99'
+        })
+      end
+    end
+
+    context ':ensure => present and configure elasticsearch module' do
+      let :params do
+        {
+          :modules => {
+            'elasticsearch' => {
+              'script_source' => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
+              'config'        => {'Cluster' => 'ES-clust'}
+            }
           }
         }
-      }
-    end
+      end
 
-    it 'provides a python concat fragment' do
-      should contain_concat__fragment(concat_fragment_name).with({
-        :target => config_filename,
-        :order => '10',
-      })
-    end
+      it 'imports elasticsearch module' do
+        should contain_concat__fragment('collectd_plugin_python_conf_elasticsearch').with({
+          :content => /Import "elasticsearch"/,
+          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+        })
+      end
 
+      it 'includes elasticsearch module configuration' do
+        should contain_concat__fragment('collectd_plugin_python_conf_elasticsearch').with({
+          :content => /<Module "elasticsearch">/,
+          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+        })
+      end
+
+      it 'includes elasticsearch Cluster name' do
+        should contain_concat__fragment('collectd_plugin_python_conf_elasticsearch').with({
+          :content => /Cluster "ES-clust"/,
+          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+        })
+      end
+    end
    # it 'Will create /etc/collectd/conf.d/10-python.conf' do
    #   should contain_concat__fragment('collectd_plugin_python_conf_elasticsearch').with({
    #     :ensure  => 'present',
@@ -50,31 +94,32 @@ describe 'collectd::plugin::python', :type => :class do
   end
 
   context ':ensure => absent' do
-    let :facts do
-      {
-        :osfamily         => 'Debian'
-      }
-    end
     let (:title) {'elasticsearch'}
     let :params do
       {
         :ensure        => 'absent',
-        :modulepath    => '/usr/lib/collectd',
-        :module        => 'elasticsearch',
-        :script_source => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
-        :config        => {'Cluster' => 'elasticsearch'},
+        :modules => {
+          'elasticsearch' => {
+            'script_source' => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
+            'config'        => {'Cluster' => 'ES-clust'}
+          }
+        }
       }
     end
-    it 'Will not create /etc/collectd/conf.d/10-elasticsearch.conf' do
-      should contain_file('elasticsearch.load').with({
-        :ensure => 'absent',
-        :path    => '/etc/collectd/conf.d/10-elasticsearch.conf',
+
+    it 'will remove /etc/collectd/conf.d/10-python.conf' do
+      should contain_file('python.load').with({
+        :ensure  => 'absent',
+        :path    => '/etc/collectd/conf.d/10-python.conf',
+        :content => /LoadPlugin python/,
       })
     end
-    it 'Will not create /usr/lib/collectd/elasticsearch.py' do
-      should contain_file('elasticsearch.script').with({
-        :ensure => 'absent',
-        :path    => '/usr/lib/collectd/elasticsearch.py',
+
+    it 'won\'t create /etc/collectd.d/conf.d/11-python.conf (no modules defined)' do
+      should_not contain_concat__fragment('collectd_plugin_python_conf_header').with({
+        :ensure  => 'absent',
+        :target  => '/etc/collectd/conf.d/11-python-config.conf',
+        :order   => '00'
       })
     end
   end
