@@ -1,4 +1,4 @@
-#
+# Single module definition
 define collectd::plugin::python::module (
   $config,
   $script_source = undef,

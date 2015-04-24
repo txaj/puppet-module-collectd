@@ -673,7 +673,7 @@ When `script_source` provided, a file called `{module}.py` will be created in `$
 
 Or define single module:
 
-```
+```puppet
 collectd::plugin::python::module {'zk-collectd':
   script_source => 'puppet:///modules/myorg/zk-collectd.py',
   config        => {
