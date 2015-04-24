@@ -15,13 +15,13 @@ define collectd::plugin::python::module (
 
   if $script_source {
     file { "${module}.script":
-      ensure  => $ensure,
-      path    => "${modulepath}/${module}.py",
-      owner   => 'root',
-      group   => $collectd::params::root_group,
-      mode    => '0640',
-      source  => $script_source,
-      notify  => Service['collectd'],
+      ensure => $ensure,
+      path   => "${modulepath}/${module}.py",
+      owner  => 'root',
+      group  => $collectd::params::root_group,
+      mode   => '0640',
+      source => $script_source,
+      notify => Service['collectd'],
     }
   }
 
