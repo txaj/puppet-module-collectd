@@ -1,6 +1,6 @@
 # See http://collectd.org/documentation/manpages/collectd.conf.5.shtml#plugin_python
 class collectd::plugin::python (
-  $modulepath = '/usr/lib/collectd/python',
+  $modulepath = $collectd::params::python_dir
   $ensure     = present,
   $modules    = {},
   $globals    = false,
