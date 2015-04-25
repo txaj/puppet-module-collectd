@@ -1,6 +1,6 @@
 # See http://collectd.org/documentation/manpages/collectd.conf.5.shtml#plugin_python
 class collectd::plugin::python (
-  $modulepath = $collectd::params::python_dir
+  $modulepath = undef,
   $ensure     = present,
   $modules    = {},
   $globals    = false,
@@ -12,6 +12,11 @@ class collectd::plugin::python (
 
   validate_hash($modules)
   validate_hash($options)
+
+  $module_dir = $modulepath ? {
+    undef   => $collectd::params::python_dir,
+    default => $modulepath
+  }
 
   $conf_dir = $collectd::params::plugin_conf_dir
 
@@ -27,7 +32,7 @@ class collectd::plugin::python (
     default  => 'directory',
   }
 
-  file { $modulepath :
+  file { $module_dir:
     ensure  => $ensure_modulepath,
     mode    => '0750',
     owner   => root,

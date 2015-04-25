@@ -11,7 +11,7 @@ define collectd::plugin::python::module (
   validate_hash($config)
 
   # $modulepath is shared for all modules, should be changed in collectd::plugin::python
-  $modulepath = $collectd::plugin::python::modulepath
+  $modulepath = $collectd::plugin::python::module_dir
 
   if $script_source {
     file { "${module}.script":

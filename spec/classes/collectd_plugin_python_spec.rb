@@ -17,7 +17,7 @@ describe 'collectd::plugin::python', :type => :class do
     context ':ensure => present and default parameters' do
 
       it 'ensures that $modulepath exits' do
-        should contain_file('/usr/lib/collectd/python').with({
+        should contain_file('/usr/share/collectd/python').with({
           :ensure  => 'directory'
         })
       end
@@ -40,7 +40,7 @@ describe 'collectd::plugin::python', :type => :class do
 
       it 'set default Python module path' do
         should contain_concat__fragment('collectd_plugin_python_conf_header').with({
-          :content => /ModulePath "\/usr\/lib\/collectd\/python"/,
+          :content => /ModulePath "\/usr\/share\/collectd\/python"/,
           :target  => '/etc/collectd/conf.d/python-config.conf',
         })
       end
@@ -93,7 +93,7 @@ describe 'collectd::plugin::python', :type => :class do
       it 'created collectd plugin file' do
         should contain_file('elasticsearch.script').with({
           :ensure  => 'present',
-          :path    => '/usr/lib/collectd/python/elasticsearch.py',
+          :path    => '/usr/share/collectd/python/elasticsearch.py',
         })
       end
 

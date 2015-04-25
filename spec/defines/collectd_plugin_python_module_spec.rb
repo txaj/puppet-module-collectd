@@ -3,8 +3,10 @@ require 'spec_helper'
 describe 'collectd::plugin::python::module', :type => :define do
   let :facts do
     {
-      :osfamily => 'Debian',
-      :concat_basedir   => tmpfilename('collectd-python'),
+      :osfamily       => 'Debian',
+      :id             => 'root',
+      :concat_basedir => tmpfilename('collectd-python'),
+      :path           => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
     }
   end
 
@@ -44,7 +46,7 @@ describe 'collectd::plugin::python::module', :type => :define do
 
     it 'set default Python module path' do
       should contain_concat__fragment('collectd_plugin_python_conf_header').with({
-        :content => /ModulePath "\/usr\/lib\/collectd\/python"/,
+        :content => /ModulePath "\/usr\/share\/collectd\/python"/,
         :target  => '/etc/collectd/conf.d/python-config.conf',
       })
     end
