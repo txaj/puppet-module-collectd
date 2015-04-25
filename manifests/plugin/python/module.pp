@@ -2,7 +2,6 @@
 define collectd::plugin::python::module (
   $config,
   $script_source = undef,
-  $modulepath    = $collectd::plugin::python::modulepath,
   $module        = $title,
   $ensure        = 'present',
 ){
@@ -14,7 +13,8 @@ define collectd::plugin::python::module (
   if $script_source {
     file { "${module}.script":
       ensure => $ensure,
-      path   => "${modulepath}/${module}.py",
+      # $modulepath is shared for all modules, can't be changed in a module
+      path   => "${collectd::plugin::python::modulepath}/${module}.py",
       owner  => 'root',
       group  => $collectd::params::root_group,
       mode   => '0640',

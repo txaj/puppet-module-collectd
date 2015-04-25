@@ -47,7 +47,6 @@ class collectd::plugin::python (
   }
 
   $defaults = {
-    'modulepath'  => $modulepath,
     'ensure'      => $ensure,
   }
   create_resources(collectd::plugin::python::module, $modules, $defaults)
