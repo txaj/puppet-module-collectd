@@ -3,6 +3,7 @@ class collectd::plugin::python (
   $modulepath = '/usr/lib/collectd/python',
   $ensure     = present,
   $modules    = {},
+  $globals    = false,
   $order      = '10',
   $interval   = undef,
 ) {
@@ -16,6 +17,7 @@ class collectd::plugin::python (
     ensure   => $ensure,
     interval => $interval,
     order    => $order,
+    globals  => $globals,
   }
 
   # should be loaded after global plugin configuration

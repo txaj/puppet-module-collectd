@@ -4,11 +4,12 @@ describe 'collectd::plugin::python', :type => :class do
 
   let :facts do
     {
-      :osfamily       => 'Debian',
-      :concat_basedir => tmpfilename('collectd-python'),
-      :id             => 'root',
-      :kernel         => 'Linux',
-      :path           => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      :osfamily         => 'Debian',
+      :concat_basedir   => tmpfilename('collectd-python'),
+      :id               => 'root',
+      :kernel           => 'Linux',
+      :path             => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      :collectd_version => '5.0'
     }
   end
 
@@ -137,6 +138,22 @@ describe 'collectd::plugin::python', :type => :class do
           :path    => '/var/lib/collectd/python/elasticsearch.py',
         })
       end
+    end
+  end
+
+  context 'change globals parameter' do
+    let :params do
+      {
+        :globals => true
+      }
+    end
+
+    it 'will change $globals settings' do
+      should contain_file('python.load').with({
+        :ensure  => 'present',
+        :path    => '/etc/collectd/conf.d/10-python.conf',
+        :content => /Globals true/,
+      })
     end
   end
 
