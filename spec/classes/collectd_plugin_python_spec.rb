@@ -26,7 +26,7 @@ describe 'collectd::plugin::python', :type => :class do
       it 'Will create /etc/collectd.d/conf.d/11-python.conf' do
         should contain_concat__fragment('collectd_plugin_python_conf_header').with({
           :content => /<Plugin "python">/,
-          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :target  => '/etc/collectd/conf.d/python-config.conf',
           :order   => '00'
         })
       end
@@ -34,14 +34,14 @@ describe 'collectd::plugin::python', :type => :class do
       it 'set default Python module path' do
         should contain_concat__fragment('collectd_plugin_python_conf_header').with({
           :content => /ModulePath "\/usr\/lib\/collectd\/python"/,
-          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :target  => '/etc/collectd/conf.d/python-config.conf',
         })
       end
 
       it 'Will create /etc/collectd.d/conf.d/11-python.conf' do
         should contain_concat__fragment('collectd_plugin_python_conf_footer').with({
           :content => /<\/Plugin>/,
-          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :target  => '/etc/collectd/conf.d/python-config.conf',
           :order   => '99'
         })
       end
@@ -65,21 +65,21 @@ describe 'collectd::plugin::python', :type => :class do
       it 'imports elasticsearch module' do
         should contain_concat__fragment('collectd_plugin_python_conf_elasticsearch').with({
           :content => /Import "elasticsearch"/,
-          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :target  => '/etc/collectd/conf.d/python-config.conf',
         })
       end
 
       it 'includes elasticsearch module configuration' do
         should contain_concat__fragment('collectd_plugin_python_conf_elasticsearch').with({
           :content => /<Module "elasticsearch">/,
-          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :target  => '/etc/collectd/conf.d/python-config.conf',
         })
       end
 
       it 'includes elasticsearch Cluster name' do
         should contain_concat__fragment('collectd_plugin_python_conf_elasticsearch').with({
           :content => /Cluster "ES-clust"/,
-          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :target  => '/etc/collectd/conf.d/python-config.conf',
         })
       end
 
@@ -94,14 +94,14 @@ describe 'collectd::plugin::python', :type => :class do
       it 'imports foo module' do
         should contain_concat__fragment('collectd_plugin_python_conf_foo').with({
           :content => /Import "foo"/,
-          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :target  => '/etc/collectd/conf.d/python-config.conf',
         })
       end
 
       it 'includes foo module configuration' do
         should contain_concat__fragment('collectd_plugin_python_conf_foo').with({
           :content => /<Module "foo">/,
-          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :target  => '/etc/collectd/conf.d/python-config.conf',
         })
         should contain_concat__fragment('collectd_plugin_python_conf_foo').with({
           :content => /Verbose "true"/,
@@ -128,7 +128,7 @@ describe 'collectd::plugin::python', :type => :class do
       it 'set default Python module path' do
         should contain_concat__fragment('collectd_plugin_python_conf_header').with({
           :content => /ModulePath "\/var\/lib\/collectd\/python"/,
-          :target  => '/etc/collectd/conf.d/11-python-config.conf',
+          :target  => '/etc/collectd/conf.d/python-config.conf',
         })
       end
 
@@ -182,7 +182,7 @@ describe 'collectd::plugin::python', :type => :class do
     it 'won\'t create /etc/collectd.d/conf.d/11-python.conf (no modules defined)' do
       should_not contain_concat__fragment('collectd_plugin_python_conf_header').with({
         :ensure  => 'absent',
-        :target  => '/etc/collectd/conf.d/11-python-config.conf',
+        :target  => '/etc/collectd/conf.d/python-config.conf',
         :order   => '00'
       })
     end

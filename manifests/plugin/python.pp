@@ -21,7 +21,7 @@ class collectd::plugin::python (
   }
 
   # should be loaded after global plugin configuration
-  $python_conf = "${collectd::params::plugin_conf_dir}/11-python-config.conf"
+  $python_conf = "${collectd::params::plugin_conf_dir}/python-config.conf"
 
   concat{ $python_conf:
     ensure         => $ensure,

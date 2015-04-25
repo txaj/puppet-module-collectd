@@ -6,7 +6,7 @@ define collectd::plugin::python::module (
   $module        = $title,
   $ensure        = 'present',
   $order         = '50',
-  $python_conf   = "${collectd::params::plugin_conf_dir}/11-python-config.conf",
+  $python_conf   = "${collectd::params::plugin_conf_dir}/python-config.conf",
 ){
   include collectd::params
   include collectd::plugin::python
