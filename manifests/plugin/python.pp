@@ -21,7 +21,7 @@ class collectd::plugin::python (
   }
 
   # should be loaded after global plugin configuration
-  $python_conf = "${collectd::params::plugin_conf_dir}/python-config.conf"
+  $python_conf = "${conf_dir}/python-config.conf"
 
   concat{ $python_conf:
     ensure         => $ensure,
@@ -47,7 +47,6 @@ class collectd::plugin::python (
   $defaults = {
     'modulepath'  => $modulepath,
     'ensure'      => $ensure,
-    'python_conf' => $python_conf,
   }
   create_resources(collectd::plugin::python::module, $modules, $defaults)
 }

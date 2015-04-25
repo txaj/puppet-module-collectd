@@ -5,8 +5,6 @@ define collectd::plugin::python::module (
   $modulepath    = $collectd::plugin::python::modulepath,
   $module        = $title,
   $ensure        = 'present',
-  $order         = '50',
-  $python_conf   = "${collectd::params::plugin_conf_dir}/python-config.conf",
 ){
   include collectd::params
   include collectd::plugin::python
@@ -27,8 +25,8 @@ define collectd::plugin::python::module (
 
   concat::fragment{"collectd_plugin_python_conf_${module}":
     ensure  => $ensure,
-    order   => $order,
-    target  => $python_conf,
+    order   => '50', # somewhere between header and footer
+    target  => $collectd::plugin::python::python_conf,
     content => template('collectd/plugin/python/module.conf.erb'),
   }
 }
