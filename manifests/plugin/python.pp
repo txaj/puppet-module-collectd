@@ -6,10 +6,12 @@ class collectd::plugin::python (
   $globals    = false,
   $order      = '10',
   $interval   = undef,
+  $options    = {},
 ) {
   include collectd::params
 
   validate_hash($modules)
+  validate_hash($options)
 
   $conf_dir = $collectd::params::plugin_conf_dir
 

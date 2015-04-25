@@ -23,7 +23,7 @@ describe 'collectd::plugin::python', :type => :class do
         })
       end
 
-      it 'Will create /etc/collectd.d/conf.d/11-python.conf' do
+      it 'Will create /etc/collectd.d/conf.d/python-config.conf' do
         should contain_concat__fragment('collectd_plugin_python_conf_header').with({
           :content => /<Plugin "python">/,
           :target  => '/etc/collectd/conf.d/python-config.conf',
@@ -38,7 +38,7 @@ describe 'collectd::plugin::python', :type => :class do
         })
       end
 
-      it 'Will create /etc/collectd.d/conf.d/11-python.conf' do
+      it 'Will create /etc/collectd.d/conf.d/python-config.conf' do
         should contain_concat__fragment('collectd_plugin_python_conf_footer').with({
           :content => /<\/Plugin>/,
           :target  => '/etc/collectd/conf.d/python-config.conf',
@@ -153,6 +153,25 @@ describe 'collectd::plugin::python', :type => :class do
         :ensure  => 'present',
         :path    => '/etc/collectd/conf.d/10-python.conf',
         :content => /Globals true/,
+      })
+    end
+  end
+
+  context 'allow passing shared options for all modules' do
+    let :params do
+      {
+        :options => { 'LogTraces' => true, 'Interactive' => false}
+      }
+    end
+
+    it 'sets options' do
+      should contain_concat__fragment('collectd_plugin_python_conf_header').with({
+        :content => /LogTraces true/,
+        :target  => '/etc/collectd/conf.d/python-config.conf',
+      })
+
+      should contain_concat__fragment('collectd_plugin_python_conf_header').with({
+        :content => /Interactive false/,
       })
     end
   end

@@ -652,6 +652,7 @@ class { 'collectd::plugin::processes':
 
  * `modulepath` is path to Python modules, this is global setting for all Python modules
  * `modules` a Hash containing configuration of Python modules, where the key is the module name
+ * `options` shared settings for all Python modules (see [documentation](https://collectd.org/documentation/manpages/collectd-python.5.shtml) for more details)
 
 NOTE: Since `v3.4.0` the syntax of this plugin has changed. Make sure to update your existing configuration. Now you can specify multiple Python modules at once:
 
@@ -667,6 +668,7 @@ class { 'collectd::plugin::python':
       'config'        => {'Verbose' => 'true'},
     }
   }
+  options    => { 'LogTraces' => true, 'Interactive' => false }
 }
 ```
 When `script_source` provided, a file called `{module}.py` will be created in `$modulepath/$module.py`.
