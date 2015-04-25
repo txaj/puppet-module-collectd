@@ -15,6 +15,13 @@ describe 'collectd::plugin::python', :type => :class do
 
   context ':ensure => present' do
     context ':ensure => present and default parameters' do
+
+      it 'ensures that $modulepath exits' do
+        should contain_file('/usr/lib/collectd/python').with({
+          :ensure  => 'directory'
+        })
+      end
+
       it 'Will create /etc/collectd/conf.d/10-python.conf to load the plugin' do
         should contain_file('python.load').with({
           :ensure  => 'present',
@@ -125,6 +132,12 @@ describe 'collectd::plugin::python', :type => :class do
         }
       end
 
+      it 'ensures that $modulepath exits' do
+        should contain_file('/var/lib/collectd/python').with({
+          :ensure  => 'directory'
+        })
+      end
+
       it 'set default Python module path' do
         should contain_concat__fragment('collectd_plugin_python_conf_header').with({
           :content => /ModulePath "\/var\/lib\/collectd\/python"/,
@@ -198,7 +211,7 @@ describe 'collectd::plugin::python', :type => :class do
       })
     end
 
-    it 'won\'t create /etc/collectd.d/conf.d/11-python.conf (no modules defined)' do
+    it 'won\'t create /etc/collectd.d/conf.d/python-config.conf (no modules defined)' do
       should_not contain_concat__fragment('collectd_plugin_python_conf_header').with({
         :ensure  => 'absent',
         :target  => '/etc/collectd/conf.d/python-config.conf',

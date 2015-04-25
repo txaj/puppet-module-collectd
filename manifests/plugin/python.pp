@@ -22,6 +22,19 @@ class collectd::plugin::python (
     globals  => $globals,
   }
 
+  $ensure_modulepath = $ensure ? {
+    'absent' => $ensure,
+    default  => 'directory',
+  }
+
+  file { $modulepath :
+    ensure  => $ensure_modulepath,
+    mode    => '0750',
+    owner   => root,
+    group   => $collectd::params::root_group,
+    require => Package[$collectd::params::package]
+  }
+
   # should be loaded after global plugin configuration
   $python_conf = "${conf_dir}/python-config.conf"
 
