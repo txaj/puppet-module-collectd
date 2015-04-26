@@ -1,9 +1,12 @@
 # See http://collectd.org/documentation/manpages/collectd.conf.5.shtml#plugin_python
+#
 class collectd::plugin::python (
   $modulepath = undef,
   $ensure     = present,
   $modules    = {},
-  $globals    = false,
+  # Unlike most other plugins, this one should set "Globals true". This will cause collectd
+  # to export the name of all objects in the Python interpreter for all plugins to see.
+  $globals    = true,
   $order      = '10',
   $interval   = undef,
   $options    = {},

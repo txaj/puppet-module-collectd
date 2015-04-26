@@ -653,6 +653,7 @@ class { 'collectd::plugin::processes':
  * `modulepath` is path to Python modules, this is global setting for all Python modules
  * `modules` a Hash containing configuration of Python modules, where the key is the module name
  * `options` shared settings for all Python modules (see [documentation](https://collectd.org/documentation/manpages/collectd-python.5.shtml) for more details)
+ * `globals` Unlike most other plugins, this one should set `Globals true`. This will cause collectd to export the name of all objects in the Python interpreter for all plugins to see. If you don't do this or your platform does not support it, the embedded interpreter will start anyway but you won't be able to load certain Python modules, e.g. "time".
 
 NOTE: Since `v3.4.0` the syntax of this plugin has changed. Make sure to update your existing configuration. Now you can specify multiple Python modules at once:
 
