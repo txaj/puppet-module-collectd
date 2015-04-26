@@ -157,7 +157,7 @@ describe 'collectd::plugin::python', :type => :class do
   context 'change globals parameter' do
     let :params do
       {
-        :globals => true
+        :globals => false
       }
     end
 
@@ -165,7 +165,7 @@ describe 'collectd::plugin::python', :type => :class do
       should contain_file('python.load').with({
         :ensure  => 'present',
         :path    => '/etc/collectd/conf.d/10-python.conf',
-        :content => /Globals true/,
+        :content => /Globals false/,
       })
     end
   end
@@ -173,18 +173,23 @@ describe 'collectd::plugin::python', :type => :class do
   context 'allow passing shared options for all modules' do
     let :params do
       {
-        :options => { 'LogTraces' => true, 'Interactive' => false}
+        :log_traces  => true,
+        :interactive => true,
+        :encoding    => 'utf-8',
       }
     end
 
     it 'sets options' do
       should contain_concat__fragment('collectd_plugin_python_conf_header').with({
         :content => /LogTraces true/,
-        :target  => '/etc/collectd/conf.d/python-config.conf',
       })
 
       should contain_concat__fragment('collectd_plugin_python_conf_header').with({
-        :content => /Interactive false/,
+        :content => /Interactive true/,
+      })
+
+      should contain_concat__fragment('collectd_plugin_python_conf_header').with({
+        :content => /Encoding utf-8/,
       })
     end
   end

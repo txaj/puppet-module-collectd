@@ -1,20 +1,24 @@
 # See http://collectd.org/documentation/manpages/collectd.conf.5.shtml#plugin_python
-#
 class collectd::plugin::python (
-  $modulepath = undef,
-  $ensure     = present,
-  $modules    = {},
+  $modulepath  = undef,
+  $ensure      = present,
+  $modules     = {},
   # Unlike most other plugins, this one should set "Globals true". This will cause collectd
   # to export the name of all objects in the Python interpreter for all plugins to see.
-  $globals    = true,
-  $order      = '10',
-  $interval   = undef,
-  $options    = {},
+  $globals     = true,
+  $order       = '10',
+  $interval    = undef,
+  # Python 2 defaults to 'ascii' and Python 3 to 'utf-8'
+  $encoding    = undef,
+  $interactive = false,
+  $log_traces  = false,
 ) {
   include collectd::params
 
   validate_hash($modules)
-  validate_hash($options)
+  validate_bool($interactive)
+  validate_bool($log_traces)
+  validate_bool($globals)
 
   $module_dir = $modulepath ? {
     undef   => $collectd::params::python_dir,
