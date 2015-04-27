@@ -1,6 +1,7 @@
 # Single module definition
 define collectd::plugin::python::module (
   $config,
+  $modulepath    = undef,
   $script_source = undef,
   $module        = $title,
   $ensure        = 'present',
@@ -10,18 +11,20 @@ define collectd::plugin::python::module (
 
   validate_hash($config)
 
-  # $modulepath is shared for all modules, should be changed in collectd::plugin::python
-  $modulepath = $collectd::plugin::python::module_dir
+  $module_dir = $modulepath ? {
+    undef   => $collectd::params::python_dir,
+    default => $modulepath
+  }
 
   if $script_source {
     file { "${module}.script":
       ensure  => $ensure,
-      path    => "${modulepath}/${module}.py",
+      path    => "${module_dir}/${module}.py",
       owner   => 'root',
       group   => $collectd::params::root_group,
       mode    => '0640',
       source  => $script_source,
-      require => File[$modulepath],
+      require => File[$module_dir],
       notify  => Service['collectd'],
     }
   }

@@ -1,6 +1,6 @@
 # See http://collectd.org/documentation/manpages/collectd.conf.5.shtml#plugin_python
 class collectd::plugin::python (
-  $modulepath  = undef,
+  $modulepaths = [],
   $ensure      = present,
   $modules     = {},
   # Unlike most other plugins, this one should set "Globals true". This will cause collectd
@@ -19,10 +19,12 @@ class collectd::plugin::python (
   validate_bool($interactive)
   validate_bool($log_traces)
   validate_bool($globals)
+  validate_array($modulepaths)
 
-  $module_dir = $modulepath ? {
-    undef   => $collectd::params::python_dir,
-    default => $modulepath
+  $module_dirs = empty($modulepaths) ? {
+    true  => [$collectd::params::python_dir],
+    # merge element(s) with the OS default
+    false => flatten([$modulepaths, $collectd::params::python_dir])
   }
 
   $conf_dir = $collectd::params::plugin_conf_dir
@@ -39,13 +41,15 @@ class collectd::plugin::python (
     default  => 'directory',
   }
 
-  file { $module_dir:
-    ensure  => $ensure_modulepath,
-    mode    => '0750',
-    owner   => root,
-    group   => $collectd::params::root_group,
-    require => Package[$collectd::params::package]
-  }
+  ensure_resource('file', $module_dirs,
+    {
+      'ensure'  => $ensure_modulepath,
+      'mode'    => '0750',
+      'owner'   => 'root',
+      'group'   => $collectd::params::root_group,
+      'require' => Package[$collectd::params::package]
+    }
+  )
 
   # should be loaded after global plugin configuration
   $python_conf = "${conf_dir}/python-config.conf"
@@ -72,7 +76,8 @@ class collectd::plugin::python (
   }
 
   $defaults = {
-    'ensure'      => $ensure,
+    'ensure'     => $ensure,
+    'modulepath' => $module_dirs[0],
   }
   create_resources(collectd::plugin::python::module, $modules, $defaults)
 }

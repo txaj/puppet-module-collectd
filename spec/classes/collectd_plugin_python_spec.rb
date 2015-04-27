@@ -16,7 +16,7 @@ describe 'collectd::plugin::python', :type => :class do
   context ':ensure => present' do
     context ':ensure => present and default parameters' do
 
-      it 'ensures that $modulepath exits' do
+      it 'ensures that $modulepaths exits' do
         should contain_file('/usr/share/collectd/python').with({
           :ensure  => 'directory'
         })
@@ -122,26 +122,44 @@ describe 'collectd::plugin::python', :type => :class do
     context 'allow changing module path' do
       let :params do
         {
-          :modulepath => '/var/lib/collectd/python',
+          :modulepaths => ['/var/lib/collectd/python', '/usr/collectd'],
           :modules    => {
             'elasticsearch' => {
               'script_source' => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
-              'config'        => {'Cluster' => 'ES-clust'}
+              'config'        => {'Cluster' => 'ES-clust'},
+              'modulepath'    => '/var/lib/collectd/python',
             }
           }
         }
       end
 
-      it 'ensures that $modulepath exits' do
+      it 'ensures that each directory on $modulepaths exits' do
         should contain_file('/var/lib/collectd/python').with({
+          :ensure  => 'directory'
+        })
+
+        should contain_file('/usr/collectd').with({
+          :ensure  => 'directory'
+        })
+
+        # default on Debian
+        should contain_file('/usr/share/collectd/python').with({
           :ensure  => 'directory'
         })
       end
 
-      it 'set default Python module path' do
+      it 'set default Python module paths' do
         should contain_concat__fragment('collectd_plugin_python_conf_header').with({
           :content => /ModulePath "\/var\/lib\/collectd\/python"/,
           :target  => '/etc/collectd/conf.d/python-config.conf',
+        })
+
+        should contain_concat__fragment('collectd_plugin_python_conf_header').with({
+          :content => /ModulePath "\/usr\/collectd"/,
+        })
+
+        should contain_concat__fragment('collectd_plugin_python_conf_header').with({
+          :content => /ModulePath "\/usr\/share\/collectd\/python"/,
         })
       end
 

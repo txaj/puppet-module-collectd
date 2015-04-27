@@ -650,7 +650,7 @@ class { 'collectd::plugin::processes':
 
 ####Class: `collectd::plugin::python`
 
- * `modulepath` is path to Python modules, this is global setting for all Python modules
+ * `modulepaths` is an array of paths where will be Collectd looking for Python modules
  * `modules` a Hash containing configuration of Python modules, where the key is the module name
  * `globals` Unlike most other plugins, this one should set `Globals true`. This will cause collectd to export the name of all objects in the Python interpreter for all plugins to see. If you don't do this or your platform does not support it, the embedded interpreter will start anyway but you won't be able to load certain Python modules, e.g. "time".
  * `interactive` when `true` it will launch an interactive Python interpreter that reads from and writes to the terminal (default: `false`)
@@ -662,7 +662,7 @@ NOTE: Since `v3.4.0` the syntax of this plugin has changed. Make sure to update 
 
 ```puppet
 class { 'collectd::plugin::python':
-  modulepath => '/usr/lib/collectd/python',
+  modulepaths => ['/usr/share/collectd/python'],
   modules    => {
     'elasticsearch': {
       'script_source' => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
@@ -684,6 +684,18 @@ collectd::plugin::python::module {'zk-collectd':
   script_source => 'puppet:///modules/myorg/zk-collectd.py',
   config        => {
     'Hosts' => "localhost:2181"
+  }
+}
+```
+
+Each plugin might use different `modulepath`, however make sure that all paths are included in `collectd::plugin::python` variable `modulepaths`. If no `modulepath` is specified, OS default will be used.
+
+```puppet
+collectd::plugin::python::module {'my-module':
+  modulepath    => '/var/share/collectd',
+  script_source => 'puppet:///modules/myorg/my-module.py',
+  config        => {
+    'Key' => "value"
   }
 }
 ```
