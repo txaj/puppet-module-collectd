@@ -141,11 +141,6 @@ describe 'collectd::plugin::python', :type => :class do
         should contain_file('/usr/collectd').with({
           :ensure  => 'directory'
         })
-
-        # default on Debian
-        should contain_file('/usr/share/collectd/python').with({
-          :ensure  => 'directory'
-        })
       end
 
       it 'set default Python module paths' do
@@ -159,7 +154,7 @@ describe 'collectd::plugin::python', :type => :class do
         })
 
         should contain_concat__fragment('collectd_plugin_python_conf_header').with({
-          :content => /ModulePath "\/usr\/share\/collectd\/python"/,
+          :content => /ModulePath "\/var\/lib\/collectd\/python"/,
         })
       end
 

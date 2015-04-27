@@ -23,8 +23,8 @@ class collectd::plugin::python (
 
   $module_dirs = empty($modulepaths) ? {
     true  => [$collectd::params::python_dir],
-    # merge element(s) with the OS default
-    false => flatten([$modulepaths, $collectd::params::python_dir])
+    # use paths provided by the user
+    false => $modulepaths
   }
 
   $conf_dir = $collectd::params::plugin_conf_dir

@@ -650,7 +650,7 @@ class { 'collectd::plugin::processes':
 
 ####Class: `collectd::plugin::python`
 
- * `modulepaths` is an array of paths where will be Collectd looking for Python modules
+ * `modulepaths` is an array of paths where will be Collectd looking for Python modules, Puppet will ensure that each of specified directories exists and it is owned by `root` (and `chmod 0750`). If you don't specify any `modulepaths` a default value for given distribution will be used.
  * `modules` a Hash containing configuration of Python modules, where the key is the module name
  * `globals` Unlike most other plugins, this one should set `Globals true`. This will cause collectd to export the name of all objects in the Python interpreter for all plugins to see. If you don't do this or your platform does not support it, the embedded interpreter will start anyway but you won't be able to load certain Python modules, e.g. "time".
  * `interactive` when `true` it will launch an interactive Python interpreter that reads from and writes to the terminal (default: `false`)
