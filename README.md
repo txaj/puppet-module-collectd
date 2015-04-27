@@ -654,7 +654,7 @@ class { 'collectd::plugin::processes':
  * `modules` a Hash containing configuration of Python modules, where the key is the module name
  * `globals` Unlike most other plugins, this one should set `Globals true`. This will cause collectd to export the name of all objects in the Python interpreter for all plugins to see. If you don't do this or your platform does not support it, the embedded interpreter will start anyway but you won't be able to load certain Python modules, e.g. "time".
  * `interactive` when `true` it will launch an interactive Python interpreter that reads from and writes to the terminal (default: `false`)
- * `log_traces` if a Python script throws an exception it will be logged by collectd with the name of the exception and the message (default: `false`)
+ * `logtraces` if a Python script throws an exception it will be logged by collectd with the name of the exception and the message (default: `false`)
 
  See [collectd-python documentation](https://collectd.org/documentation/manpages/collectd-python.5.shtml) for more details.
 
@@ -663,7 +663,7 @@ NOTE: Since `v3.4.0` the syntax of this plugin has changed. Make sure to update 
 ```puppet
 class { 'collectd::plugin::python':
   modulepaths => ['/usr/share/collectd/python'],
-  modules    => {
+  modules     => {
     'elasticsearch': {
       'script_source' => 'puppet:///modules/myorg/elasticsearch_collectd_python.py',
       'config'        => {'Cluster' => 'elasticsearch'},
@@ -672,7 +672,8 @@ class { 'collectd::plugin::python':
       'config'        => {'Verbose' => 'true'},
     }
   }
-  options    => { 'LogTraces' => true, 'Interactive' => false }
+  logtraces   => true,
+  interactive => false
 }
 ```
 When `script_source` provided, a file called `{module}.py` will be created in `$modulepath/$module.py`.

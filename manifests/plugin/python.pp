@@ -11,13 +11,13 @@ class collectd::plugin::python (
   # Python 2 defaults to 'ascii' and Python 3 to 'utf-8'
   $encoding    = undef,
   $interactive = false,
-  $log_traces  = false,
+  $logtraces  = false,
 ) {
   include collectd::params
 
   validate_hash($modules)
   validate_bool($interactive)
-  validate_bool($log_traces)
+  validate_bool($logtraces)
   validate_bool($globals)
   validate_array($modulepaths)
 

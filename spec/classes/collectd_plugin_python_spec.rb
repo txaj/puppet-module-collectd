@@ -186,7 +186,7 @@ describe 'collectd::plugin::python', :type => :class do
   context 'allow passing shared options for all modules' do
     let :params do
       {
-        :log_traces  => true,
+        :logtraces  => true,
         :interactive => true,
         :encoding    => 'utf-8',
       }
