@@ -15,6 +15,7 @@ define collectd::plugin::python::module (
     undef   => $collectd::params::python_dir,
     default => $modulepath
   }
+  validate_absolute_path($module_dir)
 
   if $script_source {
     file { "${module}.script":
