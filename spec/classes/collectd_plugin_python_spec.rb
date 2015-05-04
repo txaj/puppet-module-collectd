@@ -54,6 +54,30 @@ describe 'collectd::plugin::python', :type => :class do
       end
     end
 
+    context ':ensure => present and multiple $modulepaths' do
+      let :params do
+        {
+            :modulepaths => ['/tmp/', '/data/']
+        }
+      end
+      it 'will ensure the two directories are here' do
+        should contain_file('/tmp/')
+        should contain_file('/data/')
+      end
+      it 'will set two modulepath in the module conf' do
+        should contain_concat__fragment('collectd_plugin_python_conf_header').with(
+                   {
+                       :content => /ModulePath "\/tmp\/"/,
+                       :target  => '/etc/collectd/conf.d/python-config.conf',
+                   })
+        should contain_concat__fragment('collectd_plugin_python_conf_header').with(
+                   {
+                       :content => /ModulePath "\/data\/"/,
+                       :target  => '/etc/collectd/conf.d/python-config.conf',
+                   })
+      end
+    end
+
     context ':ensure => present and configure elasticsearch module' do
       let :params do
         {
