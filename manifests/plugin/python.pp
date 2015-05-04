@@ -11,7 +11,7 @@ class collectd::plugin::python (
   # Python 2 defaults to 'ascii' and Python 3 to 'utf-8'
   $encoding    = undef,
   $interactive = false,
-  $logtraces  = false,
+  $logtraces   = false,
 ) {
   include collectd::params
 
@@ -26,8 +26,6 @@ class collectd::plugin::python (
     # use paths provided by the user
     false => $modulepaths
   }
-
-  $conf_dir = $collectd::params::plugin_conf_dir
 
   collectd::plugin {'python':
     ensure   => $ensure,
@@ -52,7 +50,7 @@ class collectd::plugin::python (
   )
 
   # should be loaded after global plugin configuration
-  $python_conf = "${conf_dir}/python-config.conf"
+  $python_conf = "${collectd::params::plugin_conf_dir}/python-config.conf"
 
   concat{ $python_conf:
     ensure         => $ensure,
